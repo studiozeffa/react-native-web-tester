@@ -84,6 +84,7 @@ function HomeStackScreen() {
               color={Platform.select({
                 ios: '#fff',
                 android: 'transparent',
+                web: 'transparent',
               })}
               style={{
                 elevation: 0,
