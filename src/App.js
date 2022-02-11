@@ -1,11 +1,18 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { Button, View, Text } from 'react-native';
+import {
+  Button,
+  View,
+  Text,
+  Image,
+  Alert,
+  Platform,
+  FlatList,
+} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function HomeScreen({ navigation }) {
   return (
@@ -28,9 +35,25 @@ function DetailsScreen() {
 }
 
 function SettingsScreen() {
+  const data = Array(30)
+    .fill(null)
+    .map((_, idx) => `Item ${idx + 1}`);
+
+  const renderItem = ({ item }) => (
+    <View
+      style={{ height: 50, paddingHorizontal: 20, justifyContent: 'center' }}>
+      <Text>{item}</Text>
+    </View>
+  );
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
+    <View style={{ flex: 1 }}>
+      <FlatList
+        style={{ flex: 1 }}
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item}
+      />
     </View>
   );
 }
@@ -56,9 +79,15 @@ function HomeStackScreen() {
         options={{
           headerRight: () => (
             <Button
-              onPress={() => alert('This is a button!')}
+              onPress={() => Alert.alert('This is a button!')}
               title="Info"
-              color="#fff"
+              color={Platform.select({
+                ios: '#fff',
+                android: 'transparent',
+              })}
+              style={{
+                elevation: 0,
+              }}
             />
           ),
         }}
@@ -100,10 +129,19 @@ export default function App() {
           component={HomeStackScreen}
           options={{
             tabBarIcon: ({ focused, color, size }) => {
-              const iconName = focused
-                ? 'ios-information-circle'
-                : 'ios-information-circle-outline';
-              return <Ionicons name={iconName} size={size} color={color} />;
+              const iconSource = focused
+                ? require('./assets/information-circle.png')
+                : require('./assets/information-circle-outline.png');
+              return (
+                <Image
+                  source={iconSource}
+                  style={{
+                    height: size,
+                    width: size,
+                    tintColor: color,
+                  }}
+                />
+              );
             },
           }}
         />
@@ -112,10 +150,19 @@ export default function App() {
           component={SettingsStackScreen}
           options={{
             tabBarIcon: ({ focused, color, size }) => {
-              const iconName = focused
-                ? 'ios-list-circle'
-                : 'ios-list-circle-outline';
-              return <Ionicons name={iconName} size={size} color={color} />;
+              const iconSource = focused
+                ? require('./assets/list-circle.png')
+                : require('./assets/list-circle-outline.png');
+              return (
+                <Image
+                  source={iconSource}
+                  style={{
+                    height: size,
+                    width: size,
+                    tintColor: color,
+                  }}
+                />
+              );
             },
           }}
         />
