@@ -2,19 +2,25 @@
   "name": "reactnativewebtester",
   "version": "0.0.1",
   "private": true,
+  "main": "./web/main.js",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "web:build": "webpack --config ./web/webpack.config.js --mode=production",
-    "web:watch": "webpack-dev-server --config ./web/webpack.config.js --mode=development"
+    "web:clean": "rimraf ./dist/",
+    "web:build": "yarn web:clean && webpack --config ./web/webpack.config.js --mode=production",
+    "web:watch": "webpack-dev-server --config ./web/webpack.config.js --mode=development",
+    "electron:start": "electron .",
+    "electron:pack": "yarn web:build && electron-builder --dir",
+    "electron:build": "yarn web:build && electron-builder"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "6.2.0",
     "@react-navigation/native": "6.0.8",
     "@react-navigation/native-stack": "6.5.0",
+    "electron-log": "4.4.6",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-native": "0.67.2",
@@ -29,11 +35,14 @@
     "babel-jest": "^26.6.3",
     "babel-loader": "8.2.3",
     "babel-plugin-react-native-web": "0.17.5",
+    "electron": "17.0.0",
+    "electron-builder": "22.14.13",
     "eslint": "7.14.0",
     "html-webpack-plugin": "5.5.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.66.2",
     "react-test-renderer": "17.0.2",
+    "rimraf": "3.0.2",
     "url-loader": "4.1.1",
     "webpack": "5.68.0",
     "webpack-cli": "4.9.2",
@@ -41,5 +50,25 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "build": {
+    "productName": "RNW Electron Tester",
+    "files": [
+      "web/main.js",
+      "dist/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "web"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "deb"
+    }
   }
 }
